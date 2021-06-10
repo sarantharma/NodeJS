@@ -1,0 +1,20 @@
+<% layout('layouts/boilerplate')%>
+
+<h1>All products</h1>
+<div>
+  <a href="/products/new">Add Product</a>
+</div>
+<ul>
+  <div class="d-flex justify-content-around flex-wrap">
+    <% for (let product of products){%>
+    <div class="card m-3" style="width: 18rem">
+      <img src="..." class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title"><%= product.name %></h5>
+        <p class="card-text"><%= product.unitprice %></p>
+        <a href="/products/<%=product._id%>" class="btn btn-primary">View</a>
+      </div>
+    </div>
+    <% }%>
+  </div>
+</ul>
