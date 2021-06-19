@@ -2,7 +2,12 @@
 <div class="row">
   <h1 class="text-center">New Product</h1>
   <div class="col-6 offset-3">
-    <form action="/products/<%=product._id%>?_method=PUT" method="POST">
+    <form
+      action="/products/<%=product._id%>?_method=PUT"
+      method="POST"
+      novalidate
+      class="needs-validation"
+    >
       <div class="mb-3">
         <label class="form-label" for="name">Name</label>
         <input
@@ -11,7 +16,9 @@
           id="name"
           name="product[name]"
           value="<%=product.name %>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="unitprice">Unitprice</label>
@@ -26,7 +33,9 @@
             aria-describedby="price-label"
             name="product[unitprice]"
             value="<%=product.unitprice %>"
+            required
           />
+          <div class="valid-feedback">Looks good!</div>
         </div>
       </div>
       <div class="mb-3">
@@ -37,7 +46,9 @@
           id="quantity"
           name="product[quantity]"
           value="<%=product.quantity %>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">Description</label>
@@ -46,9 +57,11 @@
           type="text"
           id="description"
           name="product[description]"
+          required
         >
 <%=product.description %></textarea
         >
+        <div class="valid-feedback">Looks good!</div>
       </div>
 
       <div class="mb-3">

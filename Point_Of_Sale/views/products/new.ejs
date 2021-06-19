@@ -2,7 +2,7 @@
 <div class="row">
   <h1 class="text-center">New Product</h1>
   <div class="col-6 offset-3">
-    <form action="/products" method="POST">
+    <form action="/products" method="POST" novalidate class="needs-validation">
       <div class="mb-3">
         <label class="form-label" for="name">Name</label>
         <input
@@ -10,7 +10,9 @@
           type="text"
           id="name"
           name="product[name]"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="unitprice">Unitprice</label>
@@ -19,12 +21,14 @@
           <input
             type="text"
             class="form-control"
-            id="price"
+            id="unitprice"
             placeholder="0.00"
-            aria-label="price"
+            aria-label="unitprice"
             aria-describedby="price-label"
-            name="product[price]"
+            name="product[unitprice]"
+            required
           />
+          <div class="valid-feedback">Looks good!</div>
         </div>
       </div>
       <div class="mb-3">
@@ -34,7 +38,9 @@
           type="number"
           id="quantity"
           name="product[quantity]"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">Description</label>
@@ -43,11 +49,13 @@
           type="text"
           id="description"
           name="product[description]"
+          required
         ></textarea>
+        <div class="valid-feedback">Looks good!</div>
       </div>
 
       <div class="mb-3">
-        <button class="btn btn-success">Add Product</button>
+        <button class="btn btn-success">Update Product</button>
       </div>
     </form>
     <a href="/products">All products</a>
