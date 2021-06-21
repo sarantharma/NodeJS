@@ -57,9 +57,9 @@ app.post(
       product: Joi.object({
         name: Joi.string().required(),
         unitprice: Joi.number().required().min(0),
-        // description: Joi.string().required(),
-        // quantity: Joi.number().required().min(0),
-        // image: String,
+        description: Joi.string().required(),
+        quantity: Joi.number().required().min(0),
+        image: Joi.string().required(),
       }).required(),
     });
     const { error } = productSchema.validate(req.body);
