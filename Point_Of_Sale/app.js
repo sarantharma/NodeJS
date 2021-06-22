@@ -2,12 +2,13 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
-const Joi = require("Joi");
+const { productSchema, reviewSchema } = require("./schemas.js");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 
 const methodOverride = require("method-override");
 const Product = require("./models/product");
+const Review = require("./models/review");
 // console.log(Product.findById("60c141f137faac103a5f60a5"));
 // Database Connection
 mongoose.connect("mongodb://localhost:27017/point-of-sale", {
@@ -33,6 +34,26 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+const validateProduct = (req, res, next) => {
+  const { error } = productSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 app.get("/", function (req, res) {
   res.render("home");
 });
@@ -51,22 +72,10 @@ app.get("/products/new", (req, res) => {
 
 app.post(
   "/products",
+  validateProduct,
   catchAsync(async (req, res) => {
     // console.log(req.body.product);
-    const productSchema = Joi.object({
-      product: Joi.object({
-        name: Joi.string().required(),
-        unitprice: Joi.number().required().min(0),
-        description: Joi.string().required(),
-        quantity: Joi.number().required().min(0),
-        image: Joi.string().required(),
-      }).required(),
-    });
-    const { error } = productSchema.validate(req.body);
-    if (error) {
-      const msg = error.details.map((el) => el.message).join(",");
-      throw new ExpressError(msg, 400);
-    }
+
     const product = new Product(req.body.product);
     await product.save();
     res.redirect(`/products/${product._id}`);
@@ -76,7 +85,8 @@ app.post(
 app.get(
   "/products/:id",
   catchAsync(async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate("reviews");
+    // console.log(product);
     res.render("products/show", { product });
   })
 );
@@ -106,6 +116,19 @@ app.delete(
     const { id } = req.params;
     await Product.findByIdAndDelete(id);
     res.redirect("/products");
+  })
+);
+
+app.post(
+  "/products/:id/reviews",
+  validateReview,
+  catchAsync(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    const review = new Review(req.body.review);
+    product.reviews.push(review);
+    await review.save();
+    await product.save();
+    res.redirect(`/products/${product._id}`);
   })
 );
 

@@ -7,6 +7,12 @@ const ProductSchema = new Schema({
   description: String,
   quantity: Number,
   image: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Product", ProductSchema);
